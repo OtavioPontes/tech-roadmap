@@ -13,7 +13,9 @@ export function generateStaticParams() {
   return allTopics.map((t) => ({ slug: t.slug }));
 }
 
-export const dynamicParams = false;
+// Não usar `dynamicParams = false`: no Cloudflare (OpenNext) sem incremental cache,
+// o prerender não é encontrado e todas as páginas de tópico dão 404.
+// Slugs inexistentes continuam em 404 pelo notFound() abaixo.
 
 export async function generateMetadata(props: PageProps<"/topicos/[slug]">): Promise<Metadata> {
   const { slug } = await props.params;

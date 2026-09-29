@@ -55,3 +55,10 @@ O site **não** lê o Miro em tempo de build: o conteúdo foi curado manualmente
 4. Se usar outro subdomínio, defina a env var `NEXT_PUBLIC_SITE_URL` (usada nas metatags).
 
 Não é preciso configurar `MIRO_TOKEN` na Vercel.
+
+## Deploy no Cloudflare Workers
+
+O deploy atual roda no Cloudflare Workers via [OpenNext](https://opennext.js.org/cloudflare), configurado automaticamente pelo build do Cloudflare (sem `wrangler.jsonc` no repositório).
+
+- **Não use `export const dynamicParams = false`** nas rotas dinâmicas: sem incremental cache configurado, o OpenNext não encontra as páginas pré-renderizadas e responde 404 para todas elas.
+- Para testar localmente como no Cloudflare, é preciso Node 22+ (`npx @opennextjs/cloudflare migrate`, depois `npm run preview`).
