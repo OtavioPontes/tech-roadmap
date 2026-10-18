@@ -5,29 +5,36 @@ import { DiagramView } from "@/components/diagrams";
 import { DoneToggle } from "@/components/progress";
 import { BookCard, Chip, FigureBlock, LinkRow, SectionTitle } from "@/components/ui";
 import { YouTube } from "@/components/youtube";
-import { bookById } from "@/data/library";
-import { allTopics, findTopic } from "@/data/roadmap";
+import { studyingNow } from "@/data/profile";
+import { allTopics } from "@/data/roadmap";
+import { alternates, href, type Locale, topicHref } from "@/i18n/config";
+import { findTopic, getContent } from "@/i18n/content";
+import { getDictionary } from "@/i18n/ui";
 import { phaseTheme } from "@/lib/theme";
 
-export function generateStaticParams() {
+export function topicStaticParams() {
   return allTopics.map((t) => ({ slug: t.slug }));
 }
 
-// Não usar `dynamicParams = false`: no Cloudflare (OpenNext) sem incremental cache,
+// Não usar `dynamicParams = false` nas rotas de tópico: no Cloudflare (OpenNext) sem incremental cache,
 // o prerender não é encontrado e todas as páginas de tópico dão 404.
 // Slugs inexistentes continuam em 404 pelo notFound() abaixo.
 
-export async function generateMetadata(props: PageProps<"/topicos/[slug]">): Promise<Metadata> {
-  const { slug } = await props.params;
-  const found = findTopic(slug);
+export function topicMetadata(lang: Locale, slug: string): Metadata {
+  const found = findTopic(lang, slug);
   if (!found) return {};
-  return { title: found.topic.title, description: found.topic.summary };
+  return {
+    title: found.topic.title,
+    description: found.topic.summary,
+    alternates: alternates(lang, { pt: topicHref("pt", slug), en: topicHref("en", slug) }),
+  };
 }
 
-export default async function TopicPage(props: PageProps<"/topicos/[slug]">) {
-  const { slug } = await props.params;
-  const found = findTopic(slug);
+export function TopicView({ lang, slug }: { lang: Locale; slug: string }) {
+  const found = findTopic(lang, slug);
   if (!found) notFound();
+  const d = getDictionary(lang).topic;
+  const { bookById } = getContent(lang);
 
   const { topic, prev, next } = found;
   const { phase } = topic;
@@ -38,31 +45,37 @@ export default async function TopicPage(props: PageProps<"/topicos/[slug]">) {
 
   return (
     <article className="mx-auto max-w-4xl px-4 pt-10 pb-16 sm:px-6">
-      <nav aria-label="Trilha" className="mb-6 text-sm text-muted">
-        <Link href="/" className="hover:text-foreground">
+      <nav aria-label={d.breadcrumb} className="mb-6 text-sm text-muted">
+        <Link href={href(lang, "roadmap")} className="hover:text-foreground">
           Roadmap
         </Link>
         <span className="mx-2 text-subtle">/</span>
-        <Link href={`/#${phase.slug}`} className="hover:text-foreground">
-          Etapa {phase.number}: {phase.title}
+        <Link href={`${href(lang, "roadmap")}#${phase.slug}`} className="hover:text-foreground">
+          {getDictionary(lang).roadmap.phase} {phase.number}: {phase.title}
         </Link>
       </nav>
 
       <header className="border-b border-border pb-8">
         <p className={`font-mono text-xs font-semibold uppercase tracking-wider ${t.text}`}>
-          Tópico {position} de {phase.topics.length}
+          {d.topicOf(position, phase.topics.length)}
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{topic.title}</h1>
+        <h1 className="mt-2 font-mono text-3xl font-medium tracking-tight text-balance sm:text-4xl">{topic.title}</h1>
+        {studyingNow.includes(topic.slug) && (
+          <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-pink/40 bg-pink/10 px-2.5 py-0.5 font-mono text-xs text-pink">
+            <span aria-hidden className="size-1.5 animate-pulse rounded-full bg-pink" />
+            {d.studying}
+          </p>
+        )}
         <p className="mt-3 max-w-2xl text-lg text-pretty text-muted">{topic.summary}</p>
         <div className="mt-6">
-          <DoneToggle slug={topic.slug} />
+          <DoneToggle slug={topic.slug} lang={lang} />
         </div>
       </header>
 
       <div className="mt-10 space-y-12">
         {(topic.groups || topic.choose) && (
           <section>
-            <SectionTitle>O que estudar</SectionTitle>
+            <SectionTitle>{d.whatToStudy}</SectionTitle>
             <div className="space-y-6">
               {topic.choose && (
                 <div className={`rounded-xl border p-4 ${t.border} ${t.soft}`}>
@@ -88,7 +101,7 @@ export default async function TopicPage(props: PageProps<"/topicos/[slug]">) {
                         <span className="flex items-center gap-2">
                           <span aria-hidden className={`size-1.5 shrink-0 rounded-full ${s.optional ? "bg-subtle" : t.bar}`} />
                           <span className="font-medium">{s.title}</span>
-                          {s.optional && <span className="ml-auto text-xs text-subtle">opcional</span>}
+                          {s.optional && <span className="ml-auto text-xs text-subtle">{d.optional}</span>}
                         </span>
                         {s.items && <span className="mt-1 block pl-3.5 text-sm text-muted">{s.items.join(" · ")}</span>}
                       </li>
@@ -102,7 +115,7 @@ export default async function TopicPage(props: PageProps<"/topicos/[slug]">) {
 
         {topic.examples && (
           <section>
-            <SectionTitle>Exemplos</SectionTitle>
+            <SectionTitle>{d.examples}</SectionTitle>
             <div className="grid gap-4 sm:grid-cols-2">
               {topic.examples.map((ex) => (
                 <div key={ex.title} className="rounded-xl border border-border bg-surface p-4">
@@ -122,13 +135,13 @@ export default async function TopicPage(props: PageProps<"/topicos/[slug]">) {
 
         {hasVisuals && (
           <section>
-            <SectionTitle>Exemplos visuais</SectionTitle>
+            <SectionTitle>{d.visuals}</SectionTitle>
             <div className="space-y-6">
-              {topic.diagrams?.map((d) => (
-                <DiagramView key={d} id={d} />
+              {topic.diagrams?.map((diagram) => (
+                <DiagramView key={diagram} id={diagram} lang={lang} />
               ))}
               {topic.figures?.map((f) => (
-                <FigureBlock key={f.image} figure={f} />
+                <FigureBlock key={f.image} figure={f} lang={lang} />
               ))}
             </div>
           </section>
@@ -136,7 +149,7 @@ export default async function TopicPage(props: PageProps<"/topicos/[slug]">) {
 
         {topic.courses && (
           <section>
-            <SectionTitle count={topic.courses.length}>Cursos e aulas</SectionTitle>
+            <SectionTitle count={topic.courses.length}>{d.courses}</SectionTitle>
             <ul className="-mx-3 space-y-1">
               {topic.courses.map((l) => (
                 <LinkRow key={l.url} link={l} />
@@ -147,7 +160,7 @@ export default async function TopicPage(props: PageProps<"/topicos/[slug]">) {
 
         {topic.articles && (
           <section>
-            <SectionTitle count={topic.articles.length}>Artigos</SectionTitle>
+            <SectionTitle count={topic.articles.length}>{d.articles}</SectionTitle>
             <ul className="-mx-3 space-y-1">
               {topic.articles.map((l) => (
                 <LinkRow key={l.url} link={l} />
@@ -158,10 +171,10 @@ export default async function TopicPage(props: PageProps<"/topicos/[slug]">) {
 
         {topic.videos && (
           <section>
-            <SectionTitle count={topic.videos.length}>Vídeos</SectionTitle>
+            <SectionTitle count={topic.videos.length}>{d.videos}</SectionTitle>
             <div className="grid gap-6 sm:grid-cols-2">
               {topic.videos.map((v) => (
-                <YouTube key={v.youtubeId} video={v} />
+                <YouTube key={v.youtubeId} video={v} lang={lang} />
               ))}
             </div>
           </section>
@@ -169,29 +182,29 @@ export default async function TopicPage(props: PageProps<"/topicos/[slug]">) {
 
         {books.length > 0 && (
           <section>
-            <SectionTitle count={books.length}>Livros</SectionTitle>
+            <SectionTitle count={books.length}>{d.books}</SectionTitle>
             <ul className="grid grid-cols-2 gap-5 sm:grid-cols-4">
               {books.map((b) => (
-                <BookCard key={b.id} book={b} />
+                <BookCard key={b.id} book={b} lang={lang} />
               ))}
             </ul>
           </section>
         )}
       </div>
 
-      <nav aria-label="Navegação entre tópicos" className="mt-16 grid gap-3 border-t border-border pt-8 sm:grid-cols-2">
+      <nav aria-label={d.between} className="mt-16 grid gap-3 border-t border-border pt-8 sm:grid-cols-2">
         {prev ? (
-          <Link href={`/topicos/${prev.slug}`} className="rounded-xl border border-border p-4 transition-colors hover:bg-surface">
-            <span className="text-xs text-muted">← Anterior</span>
+          <Link href={topicHref(lang, prev.slug)} className="rounded-xl border border-border p-4 transition-colors hover:bg-surface">
+            <span className="text-xs text-muted">{d.prev}</span>
             <span className="mt-1 block font-medium">{prev.title}</span>
           </Link>
         ) : (
           <span />
         )}
         {next && (
-          <Link href={`/topicos/${next.slug}`} className="rounded-xl border border-border p-4 text-right transition-colors hover:bg-surface">
+          <Link href={topicHref(lang, next.slug)} className="rounded-xl border border-border p-4 text-right transition-colors hover:bg-surface">
             <span className="text-xs text-muted">
-              {next.phase.slug !== phase.slug ? `Próxima etapa: ${next.phase.title} →` : "Próximo →"}
+              {next.phase.slug !== phase.slug ? d.nextPhase(next.phase.title) : d.next}
             </span>
             <span className="mt-1 block font-medium">{next.title}</span>
           </Link>

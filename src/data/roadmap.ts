@@ -946,8 +946,3 @@ export const phases: Phase[] = [
 
 export const allTopics = phases.flatMap((phase) => phase.topics.map((topic) => ({ ...topic, phase })));
 
-export function findTopic(slug: string) {
-  const index = allTopics.findIndex((t) => t.slug === slug);
-  if (index === -1) return undefined;
-  return { topic: allTopics[index], prev: allTopics[index - 1], next: allTopics[index + 1] };
-}

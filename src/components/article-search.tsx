@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Link as LinkType } from "@/data/types";
+import { type Locale, topicHref } from "@/i18n/config";
+import { getDictionary } from "@/i18n/ui";
 import { LinkRow } from "./ui";
 
 export type ArticleEntry = LinkType & { topicSlug: string; topicTitle: string; phaseSlug: string };
@@ -14,25 +16,28 @@ const normalize = (s: string) =>
     .replace(/[̀-ͯ]/g, "");
 
 export function ArticleSearch({
+  lang,
   entries,
   phases,
 }: {
+  lang: Locale;
   entries: ArticleEntry[];
   phases: { slug: string; title: string; number: number }[];
 }) {
+  const d = getDictionary(lang).search;
   const [query, setQuery] = useState("");
   const [phase, setPhase] = useState<string>("");
-  const [lang, setLang] = useState<"" | "pt" | "en">("");
+  const [langFilter, setLangFilter] = useState<"" | "pt" | "en">("");
 
   const filtered = useMemo(() => {
     const q = normalize(query.trim());
     return entries.filter(
       (e) =>
         (!phase || e.phaseSlug === phase) &&
-        (!lang || e.lang === lang) &&
+        (!langFilter || e.lang === langFilter) &&
         (!q || normalize(`${e.title} ${e.topicTitle} ${e.source ?? ""}`).includes(q)),
     );
-  }, [entries, query, phase, lang]);
+  }, [entries, query, phase, langFilter]);
 
   // Agrupa por tópico mantendo a ordem do roadmap
   const groups = useMemo(() => {
@@ -56,13 +61,13 @@ export function ArticleSearch({
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Buscar: cache, DNS, SOLID, microsserviços..."
-          aria-label="Buscar artigos"
+          placeholder={d.placeholder}
+          aria-label={d.label}
           className="w-full rounded-lg border border-border bg-surface px-4 py-2.5 outline-none placeholder:text-subtle focus:border-foreground/40"
         />
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" className={pill(!phase)} onClick={() => setPhase("")}>
-            Todas as etapas
+            {d.allPhases}
           </button>
           {phases.map((p) => (
             <button key={p.slug} type="button" className={pill(phase === p.slug)} onClick={() => setPhase(p.slug)}>
@@ -71,25 +76,25 @@ export function ArticleSearch({
           ))}
           <span className="mx-1 hidden h-5 w-px bg-border sm:block" />
           {(["", "pt", "en"] as const).map((l) => (
-            <button key={l || "all"} type="button" className={pill(lang === l)} onClick={() => setLang(l)}>
-              {l === "" ? "Todos idiomas" : l === "pt" ? "Português" : "Inglês"}
+            <button key={l || "all"} type="button" className={pill(langFilter === l)} onClick={() => setLangFilter(l)}>
+              {l === "" ? d.allLangs : d[l]}
             </button>
           ))}
         </div>
       </div>
 
       <p className="mb-4 text-sm text-muted" aria-live="polite">
-        {filtered.length} {filtered.length === 1 ? "artigo" : "artigos"}
+        {d.count(filtered.length)}
       </p>
 
       {groups.length === 0 ? (
-        <p className="py-12 text-center text-muted">Nenhum artigo encontrado.</p>
+        <p className="py-12 text-center text-muted">{d.empty}</p>
       ) : (
         <div className="space-y-8">
           {groups.map(([slug, group]) => (
             <section key={slug}>
               <h2 className="mb-2 font-semibold">
-                <Link href={`/topicos/${slug}`} className="underline-offset-4 hover:underline">
+                <Link href={topicHref(lang, slug)} className="underline-offset-4 hover:underline">
                   {group.title}
                 </Link>
               </h2>

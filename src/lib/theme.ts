@@ -5,29 +5,30 @@ export const phaseTheme: Record<
   Phase["color"],
   { text: string; solid: string; soft: string; border: string; line: string; bar: string }
 > = {
+  // As chaves continuam as de roadmap.ts; as cores seguem a paleta do portfólio.
   violet: {
-    text: "text-violet-700 dark:text-violet-300",
-    solid: "bg-violet-600 text-white",
-    soft: "bg-violet-50 dark:bg-violet-950/40",
-    border: "border-violet-200 dark:border-violet-900",
-    line: "bg-violet-200 dark:bg-violet-900",
-    bar: "bg-violet-600",
+    text: "text-purple-soft",
+    solid: "bg-purple text-white",
+    soft: "bg-purple/10",
+    border: "border-purple/40",
+    line: "bg-purple/40",
+    bar: "bg-purple-soft",
   },
   teal: {
-    text: "text-teal-700 dark:text-teal-300",
-    solid: "bg-teal-600 text-white",
-    soft: "bg-teal-50 dark:bg-teal-950/40",
-    border: "border-teal-200 dark:border-teal-900",
-    line: "bg-teal-200 dark:bg-teal-900",
-    bar: "bg-teal-600",
+    text: "text-blue",
+    solid: "bg-blue text-background",
+    soft: "bg-blue/8",
+    border: "border-blue/35",
+    line: "bg-blue/35",
+    bar: "bg-blue",
   },
   amber: {
-    text: "text-amber-700 dark:text-amber-300",
-    solid: "bg-amber-500 text-stone-950",
-    soft: "bg-amber-50 dark:bg-amber-950/30",
-    border: "border-amber-200 dark:border-amber-900",
-    line: "bg-amber-200 dark:bg-amber-900",
-    bar: "bg-amber-500",
+    text: "text-pink",
+    solid: "bg-pink text-background",
+    soft: "bg-pink/8",
+    border: "border-pink/35",
+    line: "bg-pink/35",
+    bar: "bg-pink",
   },
 };
 

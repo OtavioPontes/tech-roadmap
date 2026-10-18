@@ -1,11 +1,20 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { DoneDot, PhaseProgress } from "@/components/progress";
 import { images } from "@/data/images";
-import { certifications, courses } from "@/data/library";
-import { allTopics, phases } from "@/data/roadmap";
+import { certifications } from "@/data/library";
+import { studyingNow } from "@/data/profile";
 import type { Phase, Topic } from "@/data/types";
+import { alternates, href, type Locale, routes, topicHref } from "@/i18n/config";
+import { getContent } from "@/i18n/content";
+import { getDictionary } from "@/i18n/ui";
 import { phaseTheme } from "@/lib/theme";
+
+export function roadmapMetadata(lang: Locale): Metadata {
+  const d = getDictionary(lang).roadmap;
+  return { title: d.metaTitle, description: d.metaDescription, alternates: alternates(lang, routes.roadmap) };
+}
 
 function countSubtopics(topic: Topic) {
   return (topic.groups ?? []).reduce((n, g) => n + g.subtopics.length, 0) + (topic.choose ? 1 : 0);
@@ -15,26 +24,26 @@ function countResources(topic: Topic) {
   return (topic.articles?.length ?? 0) + (topic.courses?.length ?? 0) + (topic.videos?.length ?? 0) + (topic.books?.length ?? 0);
 }
 
-export default function Home() {
+export function RoadmapView({ lang }: { lang: Locale }) {
+  const d = getDictionary(lang).roadmap;
+  const { phases, allTopics } = getContent(lang);
   const totalLinks = allTopics.reduce((n, t) => n + countResources(t), 0);
 
   return (
     <>
       <section className="mx-auto max-w-6xl px-4 pt-14 pb-10 sm:px-6 sm:pt-20">
-        <p className="mb-3 text-sm font-medium text-muted">Roadmap de carreira</p>
-        <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-          Software Engineer: dos fundamentos à arquitetura
-        </h1>
+        <p className="mb-3 font-mono text-sm text-blue">&lt;Roadmap /&gt;</p>
+        <h1 className="glow max-w-3xl font-mono text-3xl font-medium tracking-tight text-balance sm:text-5xl">{d.title}</h1>
         <p className="mt-4 max-w-2xl text-lg text-pretty text-muted">
-          Um caminho em três etapas, com os tópicos na ordem em que fazem sentido — e, para cada um, os cursos, artigos, vídeos e livros
-          que eu indico. Marque o que já estudou para acompanhar seu progresso.
+          {d.intro1} <span className="font-medium text-pink">{d.studyingBadge}</span> {d.intro1b}
         </p>
+        <p className="mt-3 max-w-2xl text-pretty text-muted">{d.intro2}</p>
 
         <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
           {[
-            [phases.length, "etapas"],
-            [allTopics.length, "tópicos"],
-            [totalLinks, "conteúdos indicados"],
+            [phases.length, d.statPhases],
+            [allTopics.length, d.statTopics],
+            [totalLinks, d.statLinks],
           ].map(([value, label]) => (
             <div key={label}>
               <dt className="sr-only">{label}</dt>
@@ -46,7 +55,7 @@ export default function Home() {
           ))}
         </dl>
 
-        <nav aria-label="Etapas" className="mt-10 grid gap-3 sm:grid-cols-3">
+        <nav aria-label={d.phasesLabel} className="mt-10 grid gap-3 sm:grid-cols-3">
           {phases.map((phase) => {
             const t = phaseTheme[phase.color];
             return (
@@ -55,7 +64,9 @@ export default function Home() {
                 href={`#${phase.slug}`}
                 className={`rounded-xl border p-4 transition-colors hover:bg-surface ${t.border}`}
               >
-                <span className={`font-mono text-xs font-semibold uppercase tracking-wider ${t.text}`}>Etapa {phase.number}</span>
+                <span className={`font-mono text-xs font-semibold uppercase tracking-wider ${t.text}`}>
+                  {d.phase} {phase.number}
+                </span>
                 <span className="mt-1 block font-semibold">{phase.title}</span>
                 <span className="mt-1 block text-sm text-muted">{phase.tagline}</span>
               </a>
@@ -65,15 +76,24 @@ export default function Home() {
       </section>
 
       <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
-        <Milestone emoji="🏁" title="Largada" text="Comece por aqui. Não pule os fundamentos — tudo depois se apoia neles." />
+        <Milestone emoji="🏁" title={d.startTitle} text={d.startText} />
 
         {phases.map((phase, i) => (
-          <PhaseSection key={phase.slug} phase={phase} isLast={i === phases.length - 1} />
+          <PhaseSection key={phase.slug} lang={lang} phase={phase} isLast={i === phases.length - 1} />
         ))}
 
-        <Finish />
+        <Finish lang={lang} />
       </div>
     </>
+  );
+}
+
+function StudyingBadge({ label }: { label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-pink/40 bg-pink/10 px-2 py-px font-mono text-[11px] text-pink">
+      <span aria-hidden className="size-1.5 animate-pulse rounded-full bg-pink" />
+      {label}
+    </span>
   );
 }
 
@@ -91,18 +111,21 @@ function Milestone({ emoji, title, text }: { emoji: string; title: string; text:
   );
 }
 
-function PhaseSection({ phase, isLast }: { phase: Phase; isLast: boolean }) {
+function PhaseSection({ lang, phase, isLast }: { lang: Locale; phase: Phase; isLast: boolean }) {
+  const d = getDictionary(lang).roadmap;
   const t = phaseTheme[phase.color];
   return (
     <section id={phase.slug} className="scroll-mt-20 pt-12">
       <div className={`rounded-2xl border p-5 sm:p-6 ${t.border} ${t.soft}`}>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-2xl">
-            <p className={`font-mono text-xs font-semibold uppercase tracking-wider ${t.text}`}>Etapa {phase.number}</p>
+            <p className={`font-mono text-xs font-semibold uppercase tracking-wider ${t.text}`}>
+              {d.phase} {phase.number}
+            </p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight">{phase.title}</h2>
             <p className="mt-2 text-pretty text-muted">{phase.description}</p>
           </div>
-          <PhaseProgress slugs={phase.topics.map((topic) => topic.slug)} barClass={t.bar} />
+          <PhaseProgress slugs={phase.topics.map((topic) => topic.slug)} barClass={t.bar} lang={lang} />
         </div>
       </div>
 
@@ -111,17 +134,24 @@ function PhaseSection({ phase, isLast }: { phase: Phase; isLast: boolean }) {
         {phase.topics.map((topic, i) => (
           <li key={topic.slug} className="relative pb-3 last:pb-0">
             <Link
-              href={`/topicos/${topic.slug}`}
+              href={topicHref(lang, topic.slug)}
               className="group flex items-start gap-4 rounded-xl py-2 pr-3 transition-colors hover:bg-surface"
             >
-              <DoneDot slug={topic.slug} number={i + 1} />
+              <DoneDot slug={topic.slug} number={i + 1} lang={lang} />
               <span className="min-w-0 flex-1 pt-1">
-                <span className="block font-medium group-hover:underline group-hover:underline-offset-4">{topic.title}</span>
+                <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="font-medium group-hover:underline group-hover:underline-offset-4">{topic.title}</span>
+                  {studyingNow.includes(topic.slug) && <StudyingBadge label={d.studyingBadge} />}
+                </span>
                 <span className="mt-0.5 line-clamp-2 block text-sm text-muted text-pretty">{topic.summary}</span>
                 <span className="mt-1.5 flex flex-wrap gap-x-3 text-xs text-subtle">
-                  {countSubtopics(topic) > 0 && <span>{countSubtopics(topic)} subtópicos</span>}
-                  {countResources(topic) > 0 && <span>{countResources(topic)} conteúdos</span>}
-                  {!!(topic.figures?.length || topic.diagrams?.length) && <span>com exemplos visuais</span>}
+                  {countSubtopics(topic) > 0 && <span>
+                      {countSubtopics(topic)} {d.subtopics}
+                    </span>}
+                  {countResources(topic) > 0 && <span>
+                      {countResources(topic)} {d.contents}
+                    </span>}
+                  {!!(topic.figures?.length || topic.diagrams?.length) && <span>{d.withVisuals}</span>}
                 </span>
               </span>
             </Link>
@@ -131,22 +161,23 @@ function PhaseSection({ phase, isLast }: { phase: Phase; isLast: boolean }) {
 
       {!isLast && (
         <p className="mt-6 ml-4 flex items-center gap-2 text-sm text-muted sm:ml-6">
-          <span aria-hidden>↓</span> Transição para a próxima etapa
+          <span aria-hidden>↓</span> {d.next}
         </p>
       )}
     </section>
   );
 }
 
-function Finish() {
-  const bytebytego = courses.find((c) => c.source === "ByteByteGo");
+function Finish({ lang }: { lang: Locale }) {
+  const d = getDictionary(lang).roadmap;
+  const bytebytego = getContent(lang).courses.find((c) => c.source === "ByteByteGo");
   return (
     <section className="mt-14 rounded-2xl border border-border bg-surface p-6 sm:p-8">
-      <Milestone emoji="🏆" title="Parabéns!" text="Chegou até aqui? Hora de validar o conhecimento e continuar se aprofundando." />
+      <Milestone emoji="🏆" title={d.finishTitle} text={d.finishText} />
 
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
         <div>
-          <h3 className="font-semibold">Certificações recomendadas</h3>
+          <h3 className="font-semibold">{d.certs}</h3>
           <ul className="mt-4 grid grid-cols-3 gap-3">
             {certifications.map((c) => {
               const img = images[c.badge];
@@ -162,7 +193,7 @@ function Finish() {
           </ul>
         </div>
         <div>
-          <h3 className="font-semibold">Para continuar em System Design</h3>
+          <h3 className="font-semibold">{d.keepGoing}</h3>
           <ul className="mt-4 space-y-3 text-sm">
             {bytebytego && (
               <li>
@@ -173,16 +204,16 @@ function Finish() {
               </li>
             )}
             <li>
-              <Link href="/livros" className="font-medium underline-offset-4 hover:underline">
-                System Design Interview, Vol. 1 e 2 — Alex Xu
+              <Link href={href(lang, "books")} className="font-medium underline-offset-4 hover:underline">
+                {d.sdiTitle}
               </Link>
-              <p className="text-muted">Os dois livros mais usados para estudar entrevistas de System Design.</p>
+              <p className="text-muted">{d.sdiText}</p>
             </li>
             <li>
-              <Link href="/referencias" className="font-medium underline-offset-4 hover:underline">
-                Blogs de engenharia e newsletters
+              <Link href={href(lang, "references")} className="font-medium underline-offset-4 hover:underline">
+                {d.blogsTitle}
               </Link>
-              <p className="text-muted">Como Netflix, Uber, Stripe, Meta e outras resolvem problemas reais em escala.</p>
+              <p className="text-muted">{d.blogsText}</p>
             </li>
           </ul>
         </div>

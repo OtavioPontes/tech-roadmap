@@ -1,13 +1,15 @@
 import Image from "next/image";
 import { images } from "@/data/images";
 import type { Book, Figure, Link as LinkType } from "@/data/types";
+import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/ui";
 import { sourceOf } from "@/lib/theme";
 
 export function PageHeader({ eyebrow, title, children }: { eyebrow?: string; title: string; children?: React.ReactNode }) {
   return (
     <header className="mx-auto max-w-6xl px-4 pt-12 pb-8 sm:px-6 sm:pt-16">
-      {eyebrow && <p className="mb-2 text-sm font-medium text-muted">{eyebrow}</p>}
-      <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{title}</h1>
+      {eyebrow && <p className="mb-2 font-mono text-sm text-blue">{eyebrow}</p>}
+      <h1 className="glow font-mono text-3xl font-medium tracking-tight text-balance sm:text-4xl">{title}</h1>
       {children && <div className="mt-3 max-w-2xl text-lg text-pretty text-muted">{children}</div>}
     </header>
   );
@@ -54,11 +56,12 @@ export function LinkRow({ link, context }: { link: LinkType; context?: string })
   );
 }
 
-export function FigureBlock({ figure }: { figure: Figure }) {
+export function FigureBlock({ figure, lang }: { figure: Figure; lang: Locale }) {
   const img = images[figure.image];
+  const d = getDictionary(lang).library;
   return (
     <figure className="overflow-hidden rounded-xl border border-border bg-white">
-      <a href={img.src} target="_blank" rel="noopener noreferrer" title="Abrir imagem em tamanho real">
+      <a href={img.src} target="_blank" rel="noopener noreferrer" title={d.openImage}>
         <Image
           src={img.src}
           width={img.width}
@@ -72,14 +75,17 @@ export function FigureBlock({ figure }: { figure: Figure }) {
       {(figure.caption || figure.credit) && (
         <figcaption className="border-t border-border bg-surface px-4 py-2.5 text-sm text-muted">
           {figure.caption}
-          {figure.credit && <span className="text-subtle"> Fonte: {figure.credit}.</span>}
+          {figure.credit && <span className="text-subtle">
+              {" "}
+              {d.source}: {figure.credit}.
+            </span>}
         </figcaption>
       )}
     </figure>
   );
 }
 
-export function BookCard({ book }: { book: Book }) {
+export function BookCard({ book, lang }: { book: Book; lang: Locale }) {
   const img = images[book.cover];
   return (
     <li className="group">
@@ -94,7 +100,7 @@ export function BookCard({ book }: { book: Book }) {
             src={img.src}
             width={img.width}
             height={img.height}
-            alt={`Capa do livro ${book.title}`}
+            alt={getDictionary(lang).library.coverAlt(book.title)}
             className="aspect-[2/3] h-auto w-full object-cover"
             sizes="(min-width: 1024px) 180px, 40vw"
           />

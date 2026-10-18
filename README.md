@@ -1,6 +1,17 @@
-# Roadmap de Carreira — Software Engineer
+# Otávio Pontes — site pessoal + roadmap
 
-Site do roadmap de Software Engineer (originalmente um board no Miro), com tópicos em 3 etapas, cursos, artigos, vídeos, livros e referências.
+Site pessoal (home com experiência, stack, projetos e contato, no visual do portfólio antigo) e o roadmap de Software Engineer que eu sigo nos meus estudos (originalmente um board no Miro), com tópicos em 3 etapas, cursos, artigos, vídeos, livros e referências.
+
+- `/` — home pessoal, com destaque para o que estou estudando agora
+- `/roadmap` — o roadmap completo; `/topicos/<slug>` — cada tópico
+- `/en/...` — versão em inglês (`/en/roadmap`, `/en/topics/<slug>`, `/en/courses`...), com seletor PT/EN no header
+
+## Idiomas (PT/EN)
+
+- Rotas: `src/app/(pt)/` (raiz) e `src/app/en/`, cada uma com seu root layout (`<html lang>` correto). Os arquivos de rota são finos: chamam as views de `src/views/` com o `lang`. Ao criar uma página nova, crie a view e uma rota em cada idioma, e registre o caminho em `src/i18n/config.ts`.
+- Textos da interface: `src/i18n/ui.ts`.
+- Conteúdo do roadmap e da biblioteca: continua em português em `src/data/`; a tradução fica em `src/i18n/content-en.ts` (chave = texto exato em PT). Se mudar um texto em PT, atualize a chave lá. Para listar o que está sem tradução: `I18N_DEBUG=1 npm run build`.
+- Conteúdo pessoal (`profile.ts`) já guarda os textos como `{ pt, en }`.
 
 Next.js 16 (App Router) + Tailwind CSS 4. Todas as páginas são geradas estaticamente.
 
@@ -17,6 +28,7 @@ Todo o conteúdo está em `src/data/`. Para mudar o site, basta editar esses arq
 
 | Arquivo | O que tem |
 | --- | --- |
+| `profile.ts` | Conteúdo pessoal da home (baseado no CV, em PT e EN): perfil, bio, experiência, formação, cursos, idiomas, stack, projetos e `studyingNow` (slugs dos tópicos em destaque como "estudando agora") |
 | `roadmap.ts` | As 3 etapas e seus tópicos: resumo, subtópicos, "escolha um(a)", exemplos, diagramas, imagens, cursos, artigos, vídeos e livros de cada tópico |
 | `library.ts` | Livros, treinamentos completos, certificações, pessoas de referência, blogs e newsletters |
 | `images.ts` | **Gerado** por `scripts/optimize-images.mjs` — não editar à mão |

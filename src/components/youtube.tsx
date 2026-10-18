@@ -3,9 +3,11 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { Video } from "@/data/types";
+import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/ui";
 
 /** Mostra só a miniatura e carrega o player do YouTube ao clicar. */
-export function YouTube({ video }: { video: Video }) {
+export function YouTube({ video, lang }: { video: Video; lang: Locale }) {
   const [playing, setPlaying] = useState(false);
 
   return (
@@ -24,7 +26,7 @@ export function YouTube({ video }: { video: Video }) {
             type="button"
             onClick={() => setPlaying(true)}
             className="group absolute inset-0 size-full cursor-pointer"
-            aria-label={`Assistir: ${video.title}`}
+            aria-label={`${getDictionary(lang).video.watch}: ${video.title}`}
           >
             <Image
               src={`https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`}

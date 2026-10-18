@@ -1,9 +1,12 @@
 "use client";
 
+import type { Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n/ui";
 import { useProgress } from "@/lib/progress";
 
-export function DoneToggle({ slug }: { slug: string }) {
+export function DoneToggle({ slug, lang }: { slug: string; lang: Locale }) {
   const { isDone, toggle } = useProgress();
+  const d = getDictionary(lang).progress;
   const done = isDone(slug);
 
   return (
@@ -18,13 +21,13 @@ export function DoneToggle({ slug }: { slug: string }) {
       }`}
     >
       <CheckIcon done={done} />
-      {done ? "Concluído" : "Marcar como concluído"}
+      {done ? d.done : d.mark}
     </button>
   );
 }
 
 /** Indicador pequeno usado nos nós do roadmap. */
-export function DoneDot({ slug, number }: { slug: string; number: number }) {
+export function DoneDot({ slug, number, lang }: { slug: string; number: number; lang: Locale }) {
   const { isDone } = useProgress();
   const done = isDone(slug);
   return (
@@ -32,14 +35,14 @@ export function DoneDot({ slug, number }: { slug: string; number: number }) {
       className={`relative z-10 grid size-8 shrink-0 place-items-center rounded-full border-2 font-mono text-xs font-semibold transition-colors ${
         done ? "border-emerald-600 bg-emerald-600 text-white" : "border-border bg-background text-muted"
       }`}
-      aria-label={done ? "Concluído" : undefined}
+      aria-label={done ? getDictionary(lang).progress.done : undefined}
     >
       {done ? <CheckIcon done /> : number}
     </span>
   );
 }
 
-export function PhaseProgress({ slugs, barClass }: { slugs: string[]; barClass: string }) {
+export function PhaseProgress({ slugs, barClass, lang }: { slugs: string[]; barClass: string; lang: Locale }) {
   const { done } = useProgress();
   const count = slugs.filter((s) => done.includes(s)).length;
   const pct = Math.round((count / slugs.length) * 100);
@@ -52,7 +55,7 @@ export function PhaseProgress({ slugs, barClass }: { slugs: string[]; barClass: 
         aria-valuenow={pct}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label="Progresso da etapa"
+        aria-label={getDictionary(lang).progress.phaseProgress}
       >
         <div className={`h-full rounded-full transition-all ${barClass}`} style={{ width: `${pct}%` }} />
       </div>
