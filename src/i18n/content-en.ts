@@ -16,6 +16,9 @@ export const contentEn: Record<string, string> = {
   "Decisões que definem o sistema inteiro": "Decisions that shape the entire system",
   "Arquitetura de software, DDD, camadas, sistemas distribuídos e os requisitos não funcionais: capacidade, escala, consistência, disponibilidade e segurança.":
     "Software architecture, DDD, layers, distributed systems and the non-functional requirements: capacity, scale, consistency, availability and security.",
+  "Construindo sistemas com LLMs": "Building systems with LLMs",
+  "Como os LLMs funcionam, RAG, agentes de IA e os padrões de arquitetura para levar IA para produção.":
+    "How LLMs work, RAG, AI agents and the architecture patterns for taking AI to production.",
 
   // ── Etapa 1 ───────────────────────────────────────────────
   "Fundamentos da Computação": "Computer Science Fundamentals",
@@ -392,4 +395,36 @@ export const contentEn: Record<string, string> = {
   Unitários: "Unit",
   "Quanto mais alto, mais lento e caro de manter. Quanto mais baixo, mais rápido e isolado.":
     "The higher up, the slower and more expensive to maintain. The lower down, the faster and more isolated.",
+
+  // ── Etapa 4 ───────────────────────────────────────────────
+  "LLMs e IA Generativa": "LLMs and Generative AI",
+  "Antes de construir com IA, entenda o que está por trás: como um LLM é treinado, o que são tokens e contexto, e por que ele às vezes inventa respostas.":
+    "Before building with AI, understand what's underneath: how an LLM is trained, what tokens and context are, and why it sometimes makes things up.",
+  "Como um LLM funciona": "How an LLM works",
+  "Pré-treinamento": "Pre-training",
+  "Tokens e janela de contexto": "Tokens and the context window",
+  "Alucinações e limitações": "Hallucinations and limitations",
+
+  "Dê ao modelo acesso aos seus dados: busque os trechos relevantes e coloque-os no contexto da pergunta, em vez de depender só do que ele aprendeu no treino.":
+    "Give the model access to your data: retrieve the relevant passages and put them in the question's context, instead of relying only on what it learned in training.",
+  "Chunking de documentos": "Document chunking",
+  "Bancos de dados vetoriais": "Vector databases",
+  "Busca semântica e busca híbrida": "Semantic and hybrid search",
+  "Avaliação de RAG": "RAG evaluation",
+
+  "Agentes de IA": "AI Agents",
+  "Agentes são LLMs em um loop que decidem quais ferramentas chamar até cumprir uma tarefa. Em produção, o desafio está na orquestração, na memória e em saber o que o agente fez.":
+    "Agents are LLMs in a loop that decide which tools to call until a task is done. In production, the challenge is orchestration, memory and knowing what the agent did.",
+  "Loop de agente": "The agent loop",
+  "Memória de curto e longo prazo": "Short- and long-term memory",
+  "Sistemas multiagente": "Multi-agent systems",
+  "Observabilidade e evals": "Observability and evals",
+
+  "Os padrões de arquitetura para colocar IA em produção: equilibrar qualidade, custo e latência, e lidar com um componente que não é determinístico.":
+    "The architecture patterns for putting AI in production: balancing quality, cost and latency, and dealing with a non-deterministic component.",
+  "Roteamento entre modelos": "Model routing",
+  "Cache semântico": "Semantic caching",
+  "Fallback e retentativas": "Fallbacks and retries",
+  "Custo e latência": "Cost and latency",
+  "Avaliação contínua (evals)": "Continuous evaluation (evals)",
 };

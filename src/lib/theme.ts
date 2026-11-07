@@ -30,6 +30,14 @@ export const phaseTheme: Record<
     line: "bg-pink/35",
     bar: "bg-pink",
   },
+  green: {
+    text: "text-green",
+    solid: "bg-green text-background",
+    soft: "bg-green/8",
+    border: "border-green/35",
+    line: "bg-green/35",
+    bar: "bg-green",
+  },
 };
 
 export function sourceOf(url: string) {

@@ -62,7 +62,7 @@ export type Phase = {
   title: string;
   tagline: string;
   description: string;
-  color: "violet" | "teal" | "amber";
+  color: "violet" | "teal" | "amber" | "green";
   topics: Topic[];
 };
 

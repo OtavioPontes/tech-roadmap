@@ -55,7 +55,7 @@ export function RoadmapView({ lang }: { lang: Locale }) {
           ))}
         </dl>
 
-        <nav aria-label={d.phasesLabel} className="mt-10 grid gap-3 sm:grid-cols-3">
+        <nav aria-label={d.phasesLabel} className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {phases.map((phase) => {
             const t = phaseTheme[phase.color];
             return (

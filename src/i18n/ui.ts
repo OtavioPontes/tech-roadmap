@@ -56,7 +56,7 @@ const pt = {
       "O roadmap de estudos que eu sigo: dos fundamentos à arquitetura e System Design, com cursos, artigos, vídeos e livros recomendados.",
     title: "O roadmap que eu sigo: dos fundamentos à arquitetura",
     intro1:
-      "Este é o mapa que eu uso nos meus próprios estudos como Software Engineer. São três etapas, com os tópicos na ordem em que fazem sentido e, para cada um, os cursos, artigos, vídeos e livros que eu indico. Os tópicos marcados com",
+      "Este é o mapa que eu uso nos meus próprios estudos como Software Engineer. São quatro etapas, com os tópicos na ordem em que fazem sentido e, para cada um, os cursos, artigos, vídeos e livros que eu indico. Os tópicos marcados com",
     intro1b: "são o meu foco atual.",
     intro2: "Ele é aberto: se quiser seguir junto, marque o que já estudou. Seu progresso fica salvo só no seu navegador.",
     statPhases: "etapas",
@@ -210,7 +210,7 @@ const en: Dictionary = {
       "The study roadmap I follow: from the fundamentals to architecture and System Design, with recommended courses, articles, videos and books.",
     title: "The roadmap I follow: from fundamentals to architecture",
     intro1:
-      "This is the map I use for my own studies as a Software Engineer. There are three stages, with topics in the order they make sense and, for each one, the courses, articles, videos and books I recommend. Topics marked",
+      "This is the map I use for my own studies as a Software Engineer. There are four stages, with topics in the order they make sense and, for each one, the courses, articles, videos and books I recommend. Topics marked",
     intro1b: "are my current focus.",
     intro2: "It's open: if you want to follow along, mark what you've already studied. Your progress is saved only in your browser.",
     statPhases: "stages",

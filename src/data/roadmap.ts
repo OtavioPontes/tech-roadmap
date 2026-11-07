@@ -911,6 +911,86 @@ const arquitetura: Topic[] = [
   },
 ];
 
+// ─────────────────────────────────────────────────────────────
+// Etapa 4 — AI Engineering
+// ─────────────────────────────────────────────────────────────
+const aiEngineering: Topic[] = [
+  {
+    slug: "llms-e-ia-generativa",
+    title: "LLMs e IA Generativa",
+    summary:
+      "Antes de construir com IA, entenda o que está por trás: como um LLM é treinado, o que são tokens e contexto, e por que ele às vezes inventa respostas.",
+    groups: [
+      {
+        subtopics: [
+          { title: "Como um LLM funciona", items: ["Pré-treinamento", "Fine-tuning", "RLHF"] },
+          { title: "Tokens e janela de contexto" },
+          { title: "Embeddings" },
+          { title: "Alucinações e limitações" },
+          { title: "Prompt engineering" },
+        ],
+      },
+    ],
+    videos: [yt("zjkBMFhNj_g", "[1hr Talk] Intro to Large Language Models", "Andrej Karpathy")],
+  },
+  {
+    slug: "rag",
+    title: "RAG — Retrieval-Augmented Generation",
+    summary:
+      "Dê ao modelo acesso aos seus dados: busque os trechos relevantes e coloque-os no contexto da pergunta, em vez de depender só do que ele aprendeu no treino.",
+    groups: [
+      {
+        subtopics: [
+          { title: "Chunking de documentos" },
+          { title: "Bancos de dados vetoriais" },
+          { title: "Busca semântica e busca híbrida" },
+          { title: "Reranking", optional: true },
+          { title: "Avaliação de RAG" },
+        ],
+      },
+    ],
+    videos: [yt("o126p1QN_RI", "Complete RAG Crash Course With Langchain In 2 Hours", "Krish Naik")],
+  },
+  {
+    slug: "agentes-de-ia",
+    title: "Agentes de IA",
+    summary:
+      "Agentes são LLMs em um loop que decidem quais ferramentas chamar até cumprir uma tarefa. Em produção, o desafio está na orquestração, na memória e em saber o que o agente fez.",
+    groups: [
+      {
+        subtopics: [
+          { title: "Tool calling" },
+          { title: "Loop de agente" },
+          { title: "Memória de curto e longo prazo" },
+          { title: "MCP — Model Context Protocol" },
+          { title: "Sistemas multiagente", optional: true },
+          { title: "Guardrails" },
+          { title: "Observabilidade e evals" },
+        ],
+      },
+    ],
+    videos: [yt("sKzL0wSN9vQ", "How a Production AI Agent System Actually Works", "Jam With AI")],
+  },
+  {
+    slug: "ai-system-design",
+    title: "AI System Design",
+    summary:
+      "Os padrões de arquitetura para colocar IA em produção: equilibrar qualidade, custo e latência, e lidar com um componente que não é determinístico.",
+    groups: [
+      {
+        subtopics: [
+          { title: "Roteamento entre modelos" },
+          { title: "Cache semântico" },
+          { title: "Fallback e retentativas" },
+          { title: "Custo e latência" },
+          { title: "Avaliação contínua (evals)" },
+        ],
+      },
+    ],
+    videos: [yt("0jCss9xfOiw", "AI System Design: 7 Patterns Explained in 17 Minutes", "Jam With AI")],
+  },
+];
+
 export const phases: Phase[] = [
   {
     slug: "fundamentos",
@@ -941,6 +1021,16 @@ export const phases: Phase[] = [
       "Arquitetura de software, DDD, camadas, sistemas distribuídos e os requisitos não funcionais: capacidade, escala, consistência, disponibilidade e segurança.",
     color: "amber",
     topics: arquitetura,
+  },
+  {
+    slug: "ai-engineering",
+    number: 4,
+    title: "AI Engineering",
+    tagline: "Construindo sistemas com LLMs",
+    description:
+      "Como os LLMs funcionam, RAG, agentes de IA e os padrões de arquitetura para levar IA para produção.",
+    color: "green",
+    topics: aiEngineering,
   },
 ];
 

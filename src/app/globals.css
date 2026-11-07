@@ -16,6 +16,7 @@
   --blue: #5dbaef;
   --purple: #6100ff;
   --purple-soft: #a47bff;
+  --green: #6ee7a8;
 
   color-scheme: dark;
 }
@@ -31,6 +32,7 @@
   --color-blue: var(--blue);
   --color-purple: var(--purple);
   --color-purple-soft: var(--purple-soft);
+  --color-green: var(--green);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-fira-code);
 
