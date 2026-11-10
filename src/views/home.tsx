@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import avatar from "@/assets/avatar.png";
+import photo from "@/assets/photo.png";
 import { SocialLinks } from "@/components/social";
 import { bio, courses, education, experience, formatMonth, languages, profile, projects, stacks, studyingNow } from "@/data/profile";
 import { alternates, href, type Locale, routes, topicHref } from "@/i18n/config";
@@ -269,19 +269,19 @@ function Hero({ lang }: { lang: Locale }) {
       <p
         aria-hidden
         lang="ja"
-        className="glow pointer-events-none absolute top-1/2 left-6 hidden -translate-y-1/2 font-mono text-lg tracking-[10px] text-foreground/80 [writing-mode:vertical-rl] xl:block"
+        className="glow pointer-events-none absolute top-1/2 left-6 hidden -translate-y-1/2 font-mono whitespace-nowrap text-lg tracking-[10px] text-foreground/80 [writing-mode:vertical-rl] xl:block"
       >
         ソフトウェア　エンジニア
       </p>
 
-      <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-24 md:grid-cols-[auto_1fr]">
+      <div className="relative mx-auto grid max-w-6xl items-center gap-10 md:items-start px-4 py-16 sm:px-6 sm:py-24 md:grid-cols-[auto_1fr]">
         <Image
-          src={avatar}
+          src={photo}
           alt={d.avatarAlt}
           width={180}
           height={180}
           priority
-          className="mx-auto size-32 transition-[filter] duration-300 [image-rendering:pixelated] hover:drop-shadow-[0_5px_5px_var(--blue)] sm:size-44 md:mx-0"
+          className="mx-auto size-32 rounded-full object-cover ring-2 ring-pink/60 transition-[box-shadow] duration-300 hover:shadow-[0_0_24px_var(--blue)] sm:size-44 md:mx-0"
         />
 
         <div className="text-center md:text-left">

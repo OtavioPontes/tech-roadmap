@@ -25,7 +25,7 @@ const pt = {
   social: { email: "E-mail" },
   home: {
     hello: "Olá, eu sou",
-    avatarAlt: "Pixel art do Otávio",
+    avatarAlt: "Foto do Otávio",
     cta: "O que estou estudando",
     nowEyebrow: "// agora",
     nowTitle: "Estudando com o meu próprio roadmap",
@@ -179,7 +179,7 @@ const en: Dictionary = {
   social: { email: "Email" },
   home: {
     hello: "Hi, I'm",
-    avatarAlt: "Pixel art of Otávio",
+    avatarAlt: "Photo of Otávio",
     cta: "What I'm studying",
     nowEyebrow: "// now",
     nowTitle: "Studying with my own roadmap",

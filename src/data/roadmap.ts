@@ -931,7 +931,10 @@ const aiEngineering: Topic[] = [
         ],
       },
     ],
-    videos: [yt("zjkBMFhNj_g", "[1hr Talk] Intro to Large Language Models", "Andrej Karpathy")],
+    videos: [
+      yt("zjkBMFhNj_g", "[1hr Talk] Intro to Large Language Models", "Andrej Karpathy"),
+      yt("EWvNQjAaOHw", "How I use LLMs", "Andrej Karpathy"),
+    ],
   },
   {
     slug: "rag",
